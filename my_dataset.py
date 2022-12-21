@@ -7,16 +7,41 @@ from torch.utils.data import Dataset
 class ProDataset(Dataset):
     def __init__(self, root: str, train: bool, transforms=None):
         super(ProDataset, self).__init__()
-        self.flag = "training" if train else "Domain3"
-        # self.flag = "Enhance_training" if train else "Domain3"
-        data_root = os.path.join(root, "SegmentationData", self.flag)
-        assert os.path.exists(data_root), f"path '{data_root}' does not exists."
-        self.transforms = transforms
-        img_names = [i for i in os.listdir(os.path.join(data_root, "data")) if i.endswith(".bmp")]
-        self.img_list = [os.path.join(data_root, "data", i) for i in img_names]
-        self.label = [os.path.join(data_root, "label", i) for i in img_names]
-        self.roi_mask = [os.path.join(data_root, "mask", i) for i in img_names]
+        # self.flag = "training" if train else ["Domain1", "Domain2", "Domain3"]
+        self.flag = "Enhance_training" if train else ["Domain1", "Domain2", "Domain3"]
 
+        if not isinstance(self.flag, list):
+            data_root = os.path.join(root, "SegmentationData", self.flag)
+            assert os.path.exists(data_root), f"path '{data_root}' does not exists."
+            self.transforms = transforms
+            img_names = [i for i in os.listdir(os.path.join(data_root, "data")) if (i.endswith(".bmp") or i.endswith(".jpg"))]
+            label_names = [i for i in os.listdir(os.path.join(data_root, "label")) if (i.endswith(".bmp") or i.endswith(".jpg") or i.endswith(".png"))]
+            mask_names = [i for i in os.listdir(os.path.join(data_root, "mask")) if (i.endswith(".bmp") or i.endswith(".jpg") or i.endswith(".png"))]
+
+            self.img_list = [os.path.join(data_root, "data", i) for i in img_names]
+            self.img_list = sorted(self.img_list, key=lambda i: os.path.basename(i).rsplit(".", maxsplit=1)[0])
+            self.label = [os.path.join(data_root, "label", i) for i in label_names]
+            self.label = sorted(self.label, key=lambda i: os.path.basename(i).rsplit(".", maxsplit=1)[0])
+            self.roi_mask = [os.path.join(data_root, "mask", i) for i in mask_names]
+            self.roi_mask = sorted(self.roi_mask, key=lambda i: os.path.basename(i).rsplit(".", maxsplit=1)[0])
+        else:
+            self.img_list = []
+            self.roi_mask = []
+            self.label = []
+            for flag in self.flag:
+                data_root = os.path.join(root, "SegmentationData", flag)
+                assert os.path.exists(data_root), f"path '{data_root}' does not exists."
+                self.transforms = transforms
+                img_names = [i for i in os.listdir(os.path.join(data_root, "data")) if (i.endswith(".bmp") or i.endswith(".jpg"))]
+                label_names = [i for i in os.listdir(os.path.join(data_root, "label")) if (i.endswith(".bmp") or i.endswith(".jpg") or i.endswith(".png"))]
+                mask_names = [i for i in os.listdir(os.path.join(data_root, "mask")) if (i.endswith(".bmp") or i.endswith(".jpg") or i.endswith(".png"))]
+
+                self.img_list.extend([os.path.join(data_root, "data", i) for i in img_names])
+                self.label.extend([os.path.join(data_root, "label", i) for i in label_names])
+                self.roi_mask.extend([os.path.join(data_root, "mask", i) for i in mask_names])
+            self.img_list = sorted(self.img_list, key=lambda i: os.path.basename(i).rsplit(".", maxsplit=1)[0])
+            self.label = sorted(self.label, key=lambda i: os.path.basename(i).rsplit(".", maxsplit=1)[0])
+            self.roi_mask = sorted(self.roi_mask, key=lambda i: os.path.basename(i).rsplit(".", maxsplit=1)[0])
 
         # check files
         for i in self.label:
@@ -34,8 +59,9 @@ class ProDataset(Dataset):
         img = Image.open(self.img_list[idx]).convert('RGB')
         manual = Image.open(self.label[idx]).convert('L')
         manual = np.array(manual) / 255
-        roi_mask = Image.open(self.roi_mask[idx]).convert('L')
+        roi_mask = Image.open(self.roi_mask[idx])
         roi_mask = 255 - np.array(roi_mask)
+        # roi_mask[np.bitwise_and(roi_mask != 0, roi_mask != 255)] = 255
         mask = np.clip(manual + roi_mask, a_min=0, a_max=255)
 
         # 这里转回PIL的原因是，transforms中是对PIL数据进行处理
