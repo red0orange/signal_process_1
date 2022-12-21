@@ -8,7 +8,7 @@ from utils import image_domain_transfer
 
 
 if __name__ == "__main__":
-    enhance_save_root = "SegmentationData/Enhance_training"
+    enhance_save_root = "SegmentationData/test"
     os.makedirs(enhance_save_root, exist_ok=True)
     os.makedirs(os.path.join(enhance_save_root, "data"), exist_ok=True)
     os.makedirs(os.path.join(enhance_save_root, "label"), exist_ok=True)

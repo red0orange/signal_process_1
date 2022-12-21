@@ -171,8 +171,8 @@ def parse_args():
     # exclude background
     parser.add_argument("--num-classes", default=1, type=int)
     parser.add_argument("--device", default="cuda", help="training device")
-    parser.add_argument("-b", "--batch-size", default=12, type=int)
-    parser.add_argument("--epochs", default=50, type=int, metavar="N",
+    parser.add_argument("-b", "--batch-size", default=10, type=int)
+    parser.add_argument("--epochs", default=5, type=int, metavar="N",
                         help="number of total epochs to train")
 
     parser.add_argument('--lr', default=0.001, type=float, help='initial learning rate')

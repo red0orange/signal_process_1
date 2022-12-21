@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from PIL import Image
 import numpy as np
 from torch.utils.data import Dataset
@@ -9,12 +10,13 @@ class ProDataset(Dataset):
         super(ProDataset, self).__init__()
         # self.flag = "training" if train else ["Domain1", "Domain2", "Domain3"]
         self.flag = "Enhance_training" if train else ["Domain1", "Domain2", "Domain3"]
+        # self.flag = "Enhance_training"
 
         if not isinstance(self.flag, list):
             data_root = os.path.join(root, "SegmentationData", self.flag)
             assert os.path.exists(data_root), f"path '{data_root}' does not exists."
             self.transforms = transforms
-            img_names = [i for i in os.listdir(os.path.join(data_root, "data")) if (i.endswith(".bmp") or i.endswith(".jpg"))]
+            img_names = [i for i in os.listdir(os.path.join(data_root, "data")) if (i.endswith(".bmp") or i.endswith(".jpg") or i.endswith(".png"))]
             label_names = [i for i in os.listdir(os.path.join(data_root, "label")) if (i.endswith(".bmp") or i.endswith(".jpg") or i.endswith(".png"))]
             mask_names = [i for i in os.listdir(os.path.join(data_root, "mask")) if (i.endswith(".bmp") or i.endswith(".jpg") or i.endswith(".png"))]
 
@@ -59,9 +61,12 @@ class ProDataset(Dataset):
         img = Image.open(self.img_list[idx]).convert('RGB')
         manual = Image.open(self.label[idx]).convert('L')
         manual = np.array(manual) / 255
-        roi_mask = Image.open(self.roi_mask[idx])
+        manual[manual > 0.5] = 1
+        manual[manual < 0.5] = 0
+        roi_mask = Image.open(self.roi_mask[idx]).convert('L')
         roi_mask = 255 - np.array(roi_mask)
-        # roi_mask[np.bitwise_and(roi_mask != 0, roi_mask != 255)] = 255
+        roi_mask[roi_mask > 127] = 255
+        roi_mask[roi_mask < 127] = 0
         mask = np.clip(manual + roi_mask, a_min=0, a_max=255)
 
         # 这里转回PIL的原因是，transforms中是对PIL数据进行处理

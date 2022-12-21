@@ -95,7 +95,10 @@ def parse_args():
 
     parser.add_argument("--data-path", default="./", help="DRIVE root")
     # parser.add_argument("--weights-path", default="/home/dehao/github_projects/pro/results/generailzation_epoch_8_best_model.pth")
-    parser.add_argument("--weights-path", default="/home/dehao/github_projects/pro/results/epoch_50_best_model.pth")
+    # parser.add_argument("--weights-path", default="/home/dehao/github_projects/pro/results/epoch_50_best_model.pth")
+    # parser.add_argument("--weights-path", default="/home/dehao/github_projects/pro/results/best_model_withmask_50.pth")
+    # parser.add_argument("--weights-path", default="/home/dehao/github_projects/pro/results/best_model_withoutmask_50.pth")
+    parser.add_argument("--weights-path", default="/home/dehao/github_projects/pro/results/best_model_withoutmask_50_10.pth")
     # exclude background
     parser.add_argument("--num-classes", default=1, type=int)
     parser.add_argument("--device", default="cuda", help="training device")
