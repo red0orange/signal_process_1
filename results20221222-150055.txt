@@ -1,0 +1,27 @@
+[epoch: 0]
+train_loss: 0.2239
+lr: 0.001000
+dice coefficient: 0.993
+global correct: 98.7
+average row correct: ['84.4', '99.0']
+IoU: ['59.7', '98.7']
+mean IoU: 79.2
+
+[epoch: 1]
+train_loss: 0.0474
+lr: 0.000953
+dice coefficient: 0.993
+global correct: 98.6
+average row correct: ['82.5', '99.0']
+IoU: ['57.9', '98.6']
+mean IoU: 78.2
+
+[epoch: 2]
+train_loss: 0.0416
+lr: 0.000905
+dice coefficient: 0.994
+global correct: 98.9
+average row correct: ['81.7', '99.3']
+IoU: ['62.1', '98.8']
+mean IoU: 80.5
+

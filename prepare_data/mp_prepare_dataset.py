@@ -18,12 +18,12 @@ def process(data, domain_1_data, domain_2_data, domain_3_data, lams, L, enhance_
     label_path = data[1]
     mask_path = data[2]
 
-    for domain in [domain_1_data, domain_2_data, domain_3_data]:
-        if index > 3:
-            break
+    for domain in [domain_3_data]:
+        # if index > 3:
+        #     break
         for j, (target_image_path, _) in enumerate(domain):
-            if index > 3:
-                break
+            # if index > 3:
+            #     break
             for lam in lams:
                 print("{} Current Index: ".format(os.path.basename(image_path)), index)
                 image = cv2.imread(image_path)
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     domain_3_data = list(zip(sorted(get_image_files(os.path.join(domain_3_root, "data"))), sorted(get_image_files(os.path.join(domain_3_root, "label")))))
 
     L = 0.003
-    lams = [1.0]
+    lams = [0.0, 0.3, 0.7]
     resize_shape = [384, 384]
 
     pool = multiprocessing.Pool(num_process)
@@ -77,15 +77,15 @@ if __name__ == "__main__":
     pool.close()
     pool.join()
 
-    # for i, (image_path, label_path, mask_path) in enumerate(training_data):
-    #     image_save_path = os.path.join(enhance_save_root, "data", "{}.png".format(os.path.basename(image_path).rsplit(".", maxsplit=1)[0]))
-    #     label_image_save_path = os.path.join(enhance_save_root, "label", "{}.png".format(os.path.basename(image_path).rsplit(".", maxsplit=1)[0]))
-    #     mask_image_save_path = os.path.join(enhance_save_root, "mask", "{}.png".format(os.path.basename(image_path).rsplit(".", maxsplit=1)[0]))
+    for i, (image_path, label_path, mask_path) in enumerate(training_data):
+        image_save_path = os.path.join(enhance_save_root, "data", "{}.png".format(os.path.basename(image_path).rsplit(".", maxsplit=1)[0]))
+        label_image_save_path = os.path.join(enhance_save_root, "label", "{}.png".format(os.path.basename(image_path).rsplit(".", maxsplit=1)[0]))
+        mask_image_save_path = os.path.join(enhance_save_root, "mask", "{}.png".format(os.path.basename(image_path).rsplit(".", maxsplit=1)[0]))
 
-    #     image = cv2.imread(image_path)
-    #     label_image = cv2.imread(label_path)
-    #     mask_image = cv2.imread(mask_path)
+        image = cv2.imread(image_path)
+        label_image = cv2.imread(label_path)
+        mask_image = cv2.imread(mask_path)
 
-    #     cv2.imwrite(image_save_path, cv2.resize(image, resize_shape))
-    #     cv2.imwrite(label_image_save_path, cv2.resize(label_image, resize_shape))
-    #     cv2.imwrite(mask_image_save_path, cv2.resize(mask_image, resize_shape))
+        cv2.imwrite(image_save_path, cv2.resize(image, resize_shape))
+        cv2.imwrite(label_image_save_path, cv2.resize(label_image, resize_shape))
+        cv2.imwrite(mask_image_save_path, cv2.resize(mask_image, resize_shape))

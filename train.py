@@ -91,7 +91,7 @@ def main(args):
                                                collate_fn=train_dataset.collate_fn)
 
     val_loader = torch.utils.data.DataLoader(val_dataset,
-                                             batch_size=1,
+                                             batch_size=batch_size * 2,
                                              num_workers=num_workers,
                                              pin_memory=True,
                                              collate_fn=val_dataset.collate_fn)
@@ -126,37 +126,39 @@ def main(args):
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, epoch, num_classes,
                                         lr_scheduler=lr_scheduler, print_freq=args.print_freq, scaler=scaler)
 
-        confmat, dice = evaluate(model, val_loader, device=device, num_classes=num_classes)
-        val_info = str(confmat)
-        print(val_info)
-        print(f"dice coefficient: {dice:.3f}")
-        # write into txt
-        with open(results_file, "a") as f:
-            # 记录每个epoch对应的train_loss、lr以及验证集各指标
-            train_info = f"[epoch: {epoch}]\n" \
-                         f"train_loss: {mean_loss:.4f}\n" \
-                         f"lr: {lr:.6f}\n" \
-                         f"dice coefficient: {dice:.3f}\n"
-            f.write(train_info + val_info + "\n\n")
+        # if epoch % 1 == 0:
+        if True:
+            confmat, dice = evaluate(model, val_loader, device=device, num_classes=num_classes)
+            val_info = str(confmat)
+            print(val_info)
+            print(f"dice coefficient: {dice:.3f}")
+            # write into txt
+            with open(results_file, "a") as f:
+                # 记录每个epoch对应的train_loss、lr以及验证集各指标
+                train_info = f"[epoch: {epoch}]\n" \
+                            f"train_loss: {mean_loss:.4f}\n" \
+                            f"lr: {lr:.6f}\n" \
+                            f"dice coefficient: {dice:.3f}\n"
+                f.write(train_info + val_info + "\n\n")
 
-        if args.save_best is True:
-            if best_dice < dice:
-                best_dice = dice
+            if args.save_best is True:
+                if best_dice < dice:
+                    best_dice = dice
+                else:
+                    continue
+
+            save_file = {"model": model.state_dict(),
+                        "optimizer": optimizer.state_dict(),
+                        "lr_scheduler": lr_scheduler.state_dict(),
+                        "epoch": epoch,
+                        "args": args}
+            if args.amp:
+                save_file["scaler"] = scaler.state_dict()
+
+            if args.save_best is True:
+                torch.save(save_file, "save_weights/best_model_30100_3710.pth")
             else:
-                continue
-
-        save_file = {"model": model.state_dict(),
-                     "optimizer": optimizer.state_dict(),
-                     "lr_scheduler": lr_scheduler.state_dict(),
-                     "epoch": epoch,
-                     "args": args}
-        if args.amp:
-            save_file["scaler"] = scaler.state_dict()
-
-        if args.save_best is True:
-            torch.save(save_file, "save_weights/best_model.pth")
-        else:
-            torch.save(save_file, "save_weights/model_{}.pth".format(epoch))
+                torch.save(save_file, "save_weights/model_{}.pth".format(epoch))
 
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
@@ -172,7 +174,7 @@ def parse_args():
     parser.add_argument("--num-classes", default=1, type=int)
     parser.add_argument("--device", default="cuda", help="training device")
     parser.add_argument("-b", "--batch-size", default=10, type=int)
-    parser.add_argument("--epochs", default=5, type=int, metavar="N",
+    parser.add_argument("--epochs", default=20, type=int, metavar="N",
                         help="number of total epochs to train")
 
     parser.add_argument('--lr', default=0.001, type=float, help='initial learning rate')

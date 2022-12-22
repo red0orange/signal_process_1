@@ -1,0 +1,9 @@
+[epoch: 0]
+train_loss: 0.1373
+lr: 0.001000
+dice coefficient: 0.990
+global correct: 98.0
+average row correct: ['96.5', '98.1']
+IoU: ['52.7', '98.0']
+mean IoU: 75.3
+

@@ -9,7 +9,8 @@ class ProDataset(Dataset):
     def __init__(self, root: str, train: bool, transforms=None):
         super(ProDataset, self).__init__()
         # self.flag = "training" if train else ["Domain1", "Domain2", "Domain3"]
-        self.flag = "Enhance_training" if train else ["Domain1", "Domain2", "Domain3"]
+        # self.flag = "Enhance_training_90100_3710" if train else ["Domain1", "Domain2", "Domain3"]
+        self.flag = "Enhance_training_30100_3710" if train else ["Domain1", "Domain2", "Domain3"]
         # self.flag = "Enhance_training"
 
         if not isinstance(self.flag, list):

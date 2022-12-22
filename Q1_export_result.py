@@ -48,12 +48,18 @@ if __name__ == "__main__":
             transfer_images_dict[i].append(transfer_image)
 
     # measure inter-class distance
-    source_domain_0_psnr_distance = np.zeros(shape=[1, len(transfer_images_dict[0])])
-    source_domain_0_ssim_distance = np.zeros(shape=[1, len(transfer_images_dict[0])])
-    source_domain_1_psnr_distance = np.zeros(shape=[1, len(transfer_images_dict[1])])
-    source_domain_1_ssim_distance = np.zeros(shape=[1, len(transfer_images_dict[1])])
-    source_domain_2_psnr_distance = np.zeros(shape=[1, len(transfer_images_dict[2])])
-    source_domain_2_ssim_distance = np.zeros(shape=[1, len(transfer_images_dict[2])])
+    source_domain_0_psnr_distance = np.zeros(shape=[1, len(ori_image_dict[0])])
+    source_domain_0_ssim_distance = np.zeros(shape=[1, len(ori_image_dict[0])])
+    source_domain_1_psnr_distance = np.zeros(shape=[1, len(ori_image_dict[1])])
+    source_domain_1_ssim_distance = np.zeros(shape=[1, len(ori_image_dict[1])])
+    source_domain_2_psnr_distance = np.zeros(shape=[1, len(ori_image_dict[2])])
+    source_domain_2_ssim_distance = np.zeros(shape=[1, len(ori_image_dict[2])])
+    source_transfer_domain_0_psnr_distance = np.zeros(shape=[1, len(transfer_images_dict[0])])
+    source_transfer_domain_0_ssim_distance = np.zeros(shape=[1, len(transfer_images_dict[0])])
+    source_transfer_domain_1_psnr_distance = np.zeros(shape=[1, len(transfer_images_dict[1])])
+    source_transfer_domain_1_ssim_distance = np.zeros(shape=[1, len(transfer_images_dict[1])])
+    source_transfer_domain_2_psnr_distance = np.zeros(shape=[1, len(transfer_images_dict[2])])
+    source_transfer_domain_2_ssim_distance = np.zeros(shape=[1, len(transfer_images_dict[2])])
     domain_0_transfer_psnr_distance = np.zeros(shape=[len(transfer_images_dict[0]), len(transfer_images_dict[0])])
     domain_0_transfer_ssim_distance = np.zeros(shape=[len(transfer_images_dict[0]), len(transfer_images_dict[0])])
     domain_1_transfer_psnr_distance = np.zeros(shape=[len(transfer_images_dict[1]), len(transfer_images_dict[1])])
@@ -85,6 +91,9 @@ if __name__ == "__main__":
             [source_domain_0_psnr_distance, source_domain_0_ssim_distance],
             [source_domain_1_psnr_distance, source_domain_1_ssim_distance],
             [source_domain_2_psnr_distance, source_domain_2_ssim_distance],
+            [source_transfer_domain_0_psnr_distance, source_transfer_domain_0_ssim_distance],
+            [source_transfer_domain_1_psnr_distance, source_transfer_domain_1_ssim_distance],
+            [source_transfer_domain_2_psnr_distance, source_transfer_domain_2_ssim_distance],
             [domain_0_transfer_psnr_distance, domain_0_transfer_ssim_distance],
             [domain_1_transfer_psnr_distance, domain_1_transfer_ssim_distance],
             [domain_2_transfer_psnr_distance, domain_2_transfer_ssim_distance],
@@ -103,6 +112,9 @@ if __name__ == "__main__":
             [[source_image], ori_image_dict[0]],
             [[source_image], ori_image_dict[1]],
             [[source_image], ori_image_dict[2]],
+            [[source_image], transfer_images_dict[0]],
+            [[source_image], transfer_images_dict[1]],
+            [[source_image], transfer_images_dict[2]],
             [transfer_images_dict[0], ori_image_dict[0]],
             [transfer_images_dict[1], ori_image_dict[1]],
             [transfer_images_dict[2], ori_image_dict[2]],
@@ -143,6 +155,9 @@ if __name__ == "__main__":
     print("Mean PSNR between source and domain 0: ", np.mean(source_domain_0_psnr_distance))
     print("Mean PSNR between source and domain 1: ", np.mean(source_domain_1_psnr_distance))
     print("Mean PSNR between source and domain 2: ", np.mean(source_domain_2_psnr_distance))
+    print("Mean PSNR between source and transfer domain 0: ", np.mean(source_transfer_domain_0_psnr_distance))
+    print("Mean PSNR between source and transfer domain 1: ", np.mean(source_transfer_domain_1_psnr_distance))
+    print("Mean PSNR between source and transfer domain 2: ", np.mean(source_transfer_domain_2_psnr_distance))
     print("Mean PSNR between ori domain 0 and transfered domain 0: ", np.mean(domain_0_transfer_psnr_distance))
     print("Mean PSNR between ori domain 1 and transfered domain 1: ", np.mean(domain_1_transfer_psnr_distance))
     print("Mean PSNR between ori domain 2 and transfered domain 2: ", np.mean(domain_2_transfer_psnr_distance))

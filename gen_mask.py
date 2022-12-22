@@ -4,8 +4,8 @@ import os
 
 # processing_dir = "SegmentationData/Domain1"
 # processing_dir = "SegmentationData/Domain2"
-processing_dir = "SegmentationData/Domain3"
-# processing_dir = "SegmentationData/training"
+# processing_dir = "SegmentationData/Domain3"
+processing_dir = "SegmentationData/training"
 os.makedirs(os.path.join(processing_dir, "mask"), exist_ok=True)
 image_dir_path = os.path.join(processing_dir, "data")
 image_list = os.listdir(image_dir_path)
