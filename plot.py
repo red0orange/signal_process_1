@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
-    result_txt = "/home/dehao/github_projects/pro/results/generailzation_epoch_8_best_model.txt"
+    result_txt = "/home/dehao/github_projects/pro/results/results20221221-101357_withoutmask50_10(1).txt"
     with open(result_txt, "r") as f:
         result_str = f.read()
     print(result_str)
